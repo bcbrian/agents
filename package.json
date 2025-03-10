@@ -1,0 +1,28 @@
+{
+  "name": "@brianbuildz/agents-monorepo",
+  "private": true,
+  "version": "0.1.0",
+  "description": "A collection of agent tools and utilities for building autonomous agents",
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "lint": "npm run lint --workspaces",
+    "test": "npm run test --workspaces",
+    "clean": "npm run clean --workspaces"
+  },
+  "keywords": [
+    "agents",
+    "ai",
+    "automation",
+    "mcp",
+    "model-context-protocol"
+  ],
+  "author": "Brian Holt <brianbuildz@example.com>",
+  "license": "MIT",
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.2"
+  }
+}
