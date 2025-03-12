@@ -257,7 +257,7 @@ export async function handleToolCall(
           scale,
           quality,
           fit,
-          path: outputPath // Pass the custom path if provided
+          ...(outputPath ? { path: outputPath } : {}) // Only include path if outputPath is defined
         });
         
         log('renderChart result:', result);

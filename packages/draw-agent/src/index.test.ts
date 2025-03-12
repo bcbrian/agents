@@ -102,7 +102,9 @@ describe('Draw Agent', () => {
       });
       
       expect(result.content[0].type).toBe('text');
-      expect(result.content[0].text).toContain('Image rendered at:');
+      expect(result.content[0].text).toContain('Chart Generated Successfully');
+      expect(result.content[0].text).toContain('File Location');
+      expect(result.content[0].text).toContain('Open Image in Browser');
     });
     
     // Skip the error test for now as it's difficult to properly mock
