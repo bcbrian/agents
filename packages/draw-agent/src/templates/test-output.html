@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mermaid Diagram Renderer</title>
+    <!-- Load Mermaid library from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.5.0/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: white;
+        }
+        .diagram-container {
+            text-align: center;
+            max-width: 100%;
+            padding: 20px;
+        }
+        /* Style for the diagram itself */
+        .mermaid {
+            display: inline-block;
+            text-align: center;
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="diagram-container">
+        <!-- Mermaid diagram will be inserted here -->
+        <div class="mermaid">
+            pie
+    "Slice A" : 30
+    "Slice B" : 50
+    "Slice C" : 20
+        </div>
+    </div>
+
+    <script>
+        // Initialize Mermaid with configuration
+        mermaid.initialize({
+            securityLevel: 'loose', // Required for external content
+            startOnLoad: true,
+            theme: 'DEFAULT', // This can be changed via parameters
+            logLevel: 'error',
+            fontFamily: 'arial, sans-serif'
+        });
+
+        // Function to update Mermaid diagram after the page is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mermaid will automatically process the diagram when the page loads
+            // You can add additional processing here if needed
+            
+            // Log when rendering is complete (useful for Playwright to know when to take screenshot)
+            console.log('Mermaid rendering complete');
+        });
+    </script>
+</body>
+</html> 
