@@ -17,6 +17,12 @@ This package provides a basic MCP server that responds with a "# hello world" ma
 npm install -g @brianbuildz/hello-agent
 ```
 
+Alternatively, you can run the agent directly with npx:
+
+```bash
+npx -y @brianbuildz/hello-agent
+```
+
 ## Usage
 
 ### As a Command Line Tool
@@ -28,6 +34,28 @@ hello-agent
 ```
 
 This will start the MCP server. The server communicates using the MCP protocol via standard input/output.
+
+### Integration with Cursor
+
+To use the hello-agent with Cursor:
+
+1. In Cursor, click the settings icon ⚙️ and navigate to the "MCP Servers" section.
+
+2. Click "+" to add a new agent.
+
+3. Set the following:
+   - **Name**: Hello Agent
+   - **Type**: command
+   - **Command**: `npx -y @brianbuildz/hello-agent`
+
+4. Click "Save" to register the agent.
+
+5. You can now use the Hello Agent by sending commands to it in Cursor. For example:
+   ```
+   @Hello Agent say hello
+   ```
+
+6. The agent will respond with a markdown-formatted "# hello world" heading.
 
 ### In an MCP Client
 

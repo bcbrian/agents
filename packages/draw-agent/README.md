@@ -40,6 +40,12 @@ When developing MCP servers:
 npm install -g @brianbuildz/draw-agent
 ```
 
+Alternatively, you can run the agent directly with npx:
+
+```bash
+npx -y @brianbuildz/draw-agent
+```
+
 ## Usage
 
 ### As a Command Line Tool
@@ -56,25 +62,25 @@ This will start the MCP server. The server communicates using the MCP protocol v
 
 To use the draw-agent with Cursor:
 
-1. Install the agent globally:
-   ```bash
-   npm install -g @brianbuildz/draw-agent
-   ```
+1. In Cursor, click the settings icon ⚙️ and navigate to the "MCP Servers" section.
 
-2. In Cursor, click the "+" button in the Agents panel to add a new agent.
+2. Click "+" to add a new agent.
 
 3. Set the following:
    - **Name**: Draw Agent
-   - **Command**: `npx -y draw-agent`
+   - **Type**: command
+   - **Command**: `npx -y @brianbuildz/draw-agent`
 
-4. Click "Add" to register the agent.
+4. Click "Save" to register the agent.
+
+![Draw Agent Setup in Cursor](https://github.com/brianbuildz/agents/blob/main/packages/draw-agent/assets/cursor-setup.png?raw=true)
 
 5. You can now use the Draw Agent by sending commands to it in Cursor. For example:
    ```
    @Draw Agent Please create a pie chart showing market share for products A (35%), B (45%), and C (20%)
    ```
 
-6. The agent will respond with a Mermaid diagram that you can view directly in Cursor.
+6. The agent will respond with a Mermaid diagram that you can view directly in Cursor, and also provides ways to render it as an actual image.
 
 ### Verification
 
@@ -114,6 +120,15 @@ The draw-agent accepts the following data formats:
   ]
 }
 ```
+
+## Available Tools
+
+The Draw Agent provides two main tools:
+
+1. **defineChart** - Creates Mermaid syntax for charts and diagrams without rendering them
+2. **drawChart** - Renders Mermaid diagrams as visual images
+
+These tools work together to create and visualize various types of charts and diagrams.
 
 ## Development
 
