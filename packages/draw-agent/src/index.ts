@@ -42,10 +42,10 @@ function safeNotification(server: Server, notification: any) {
   (server as any).notification(jsonrpcNotification);
 }
 
-// Define our drawing tool with original schema properties
-export const DRAW_TOOL: Tool = {
-  name: "drawChart",
-  description: "Creates visualizations including charts, graphs, diagrams, and flow charts",
+// Define our chart definition tool
+export const DEFINE_CHART_TOOL: Tool = {
+  name: "defineChart",
+  description: "Defines chart or diagram structure in Mermaid syntax without rendering it visually",
   inputSchema: {
     type: "object",
     properties: {
@@ -77,9 +77,9 @@ export const DRAW_TOOL: Tool = {
   },
 };
 
-// Define our rendering tool
-export const RENDER_TOOL: Tool = {
-  name: "renderChart",
+// Define our chart drawing tool
+export const DRAW_CHART_TOOL: Tool = {
+  name: "drawChart",
   description: "Renders Mermaid diagram code as a visual image using Mermaid CLI",
   inputSchema: {
     type: "object",
@@ -175,14 +175,14 @@ export async function handleToolCall(
   params: Record<string, any>
 ): Promise<CallToolResult> {
   try {
-    if (toolName === 'drawChart') {
+    if (toolName === 'defineChart') {
       try {
         // Log the data
         const dataString = params.data as string;
         const explicitChartType = params.chartType as ChartType | undefined;
         const title = params.title as string | undefined;
         
-        log(`drawChart request received: ${dataString}, chartType: ${explicitChartType}, title: ${title}`);
+        log(`defineChart request received: ${dataString}, chartType: ${explicitChartType}, title: ${title}`);
         
         // Parse input data
         const parsedData = parseInputData(dataString);
@@ -207,8 +207,8 @@ export async function handleToolCall(
         log(`Generated Mermaid markdown for ${chartType} chart`);
         log("Markdown content", markdown);
         
-        // Construct a response with both the markdown and a log message
-        const responseText = `\`\`\`mermaid\n${markdown}\n\`\`\`\n\nGenerated ${chartType} chart from provided data.`;
+        // Use the markdown directly without wrapping it again in code blocks
+        const responseText = markdown;
         
         // Return the result with proper content formatting
         return {
@@ -220,17 +220,17 @@ export async function handleToolCall(
           ]
         };
       } catch (error) {
-        logError('Error processing drawChart:', error);
+        logError('Error processing defineChart:', error);
         return {
           content: [
             {
               type: "text",
-              text: `Error generating chart: ${error instanceof Error ? error.message : String(error)}`
+              text: `Error generating chart definition: ${error instanceof Error ? error.message : String(error)}`
             }
           ]
         };
       }
-    } else if (toolName === 'renderChart') {
+    } else if (toolName === 'drawChart') {
       try {
         // Log the Mermaid code
         const mermaidCode = params.mermaidCode as string;
@@ -244,7 +244,7 @@ export async function handleToolCall(
         const fit = params.fit as 'contain' | 'fill' | 'actual' | undefined;
         const outputPath = params.outputPath as string | undefined;
         
-        log(`renderChart request received with ${mermaidCode.length} characters of Mermaid code`);
+        log(`drawChart request received with ${mermaidCode.length} characters of Mermaid code`);
         log(`Render options: width=${width}, height=${height}, format=${format}, theme=${theme}, backgroundColor=${backgroundColor}, scale=${scale}, quality=${quality}, fit=${fit}, outputPath=${outputPath}`);
         
         // Use Mermaid CLI renderer
@@ -260,7 +260,7 @@ export async function handleToolCall(
           ...(outputPath ? { path: outputPath } : {}) // Only include path if outputPath is defined
         });
         
-        log('renderChart result:', result);
+        log('drawChart result:', result);
         
         if (result.success && result.imagePath) {
           // Create file:// URL for direct file access
@@ -316,7 +316,7 @@ ${scale ? `- **Scale**: ${scale}×\n` : ''}${theme ? `- **Theme**: ${theme}\n` :
           };
         }
       } catch (error) {
-        logError('Error processing renderChart:', error);
+        logError('Error processing drawChart:', error);
         return {
           content: [
             {
@@ -352,8 +352,8 @@ const server = new Server(
     capabilities: {
       resources: {},
       tools: {
-        drawChart: DRAW_TOOL,
-        renderChart: RENDER_TOOL,
+        defineChart: DEFINE_CHART_TOOL,
+        drawChart: DRAW_CHART_TOOL,
       },
     },
   }
@@ -376,7 +376,7 @@ async function runServer() {
 
     // Set up request handlers
     server.setRequestHandler(ListToolsRequestSchema, async () => ({
-      tools: [DRAW_TOOL, RENDER_TOOL],
+      tools: [DEFINE_CHART_TOOL, DRAW_CHART_TOOL],
     }));
 
     server.setRequestHandler(ListResourcesRequestSchema, async () => ({

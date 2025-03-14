@@ -1,6 +1,6 @@
 {
   "name": "@brianbuildz/draw-agent",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "An agent for drawing graphs, charts, diagrams, and visualizations following the Model Context Protocol (MCP)",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { DRAW_TOOL, RENDER_TOOL, handleToolCall } from './index';
+import { DEFINE_CHART_TOOL, DRAW_CHART_TOOL, handleToolCall } from './index';
 import * as mermaidGenerator from './mermaid-generator';
 
 // Mock the mermaid-generator module
@@ -28,39 +28,39 @@ describe('Draw Agent', () => {
     vi.clearAllMocks();
   });
   
-  describe('DRAW_TOOL Definition', () => {
+  describe('DEFINE_CHART_TOOL Definition', () => {
     it('should have the correct name and description', () => {
-      expect(DRAW_TOOL.name).toBe('drawChart');
-      expect(DRAW_TOOL.description).toContain('Creates visualizations');
+      expect(DEFINE_CHART_TOOL.name).toBe('defineChart');
+      expect(DEFINE_CHART_TOOL.description).toContain('Defines chart or diagram');
     });
     
     it('should require data parameter', () => {
-      const requiredParams = DRAW_TOOL.inputSchema.required as string[];
+      const requiredParams = DEFINE_CHART_TOOL.inputSchema.required as string[];
       expect(requiredParams).toContain('data');
     });
     
     it('should define the correct return structure', () => {
-      const returns = DRAW_TOOL.returns as any;
+      const returns = DEFINE_CHART_TOOL.returns as any;
       expect(returns.properties).toHaveProperty('markdown');
       expect(returns.required).toContain('markdown');
     });
   });
   
-  describe('RENDER_TOOL Definition', () => {
+  describe('DRAW_CHART_TOOL Definition', () => {
     it('should have the correct name and description', () => {
-      expect(RENDER_TOOL.name).toBe('renderChart');
-      expect(RENDER_TOOL.description).toContain('Renders Mermaid diagram');
+      expect(DRAW_CHART_TOOL.name).toBe('drawChart');
+      expect(DRAW_CHART_TOOL.description).toContain('Renders Mermaid diagram');
     });
     
     it('should require mermaidCode parameter', () => {
-      const requiredParams = RENDER_TOOL.inputSchema.required as string[];
+      const requiredParams = DRAW_CHART_TOOL.inputSchema.required as string[];
       expect(requiredParams).toContain('mermaidCode');
     });
   });
   
   describe('handleToolCall', () => {
-    it('should process drawChart requests', async () => {
-      const result = await handleToolCall('drawChart', {
+    it('should process defineChart requests', async () => {
+      const result = await handleToolCall('defineChart', {
         data: JSON.stringify({
           labels: ['A', 'B'],
           values: [50, 50]
@@ -70,11 +70,12 @@ describe('Draw Agent', () => {
       });
       
       expect(result.content[0].type).toBe('text');
-      expect(result.content[0].text).toContain('mermaid');
+      expect(result.content[0].text).toContain('pie');
+      expect(result.content[0].text).toContain('"A" : 50');
     });
     
     it('should handle missing chart type by using suggestion', async () => {
-      await handleToolCall('drawChart', {
+      await handleToolCall('defineChart', {
         data: JSON.stringify({
           labels: ['A', 'B'],
           values: [30, 70]
@@ -86,16 +87,17 @@ describe('Draw Agent', () => {
     });
     
     it('should handle non-JSON input data gracefully', async () => {
-      const result = await handleToolCall('drawChart', {
+      const result = await handleToolCall('defineChart', {
         data: 'This is not JSON data',
         chartType: 'pie'
       });
       
-      expect(result.content[0].text).toContain('mermaid');
+      expect(result.content[0].text).toContain('pie');
+      expect(result.content[0].text).toContain('"A" : 50');
     });
     
-    it('should process renderChart requests', async () => {
-      const result = await handleToolCall('renderChart', {
+    it('should process drawChart requests', async () => {
+      const result = await handleToolCall('drawChart', {
         mermaidCode: 'graph TD\nA-->B',
         width: 800,
         height: 600
